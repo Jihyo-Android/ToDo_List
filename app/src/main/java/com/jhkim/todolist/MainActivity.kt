@@ -15,10 +15,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.auth.AuthUI
 import com.jhkim.todolist.databinding.ActivityMainBinding
 import com.jhkim.todolist.databinding.ItemTodoBinding
 
 class MainActivity : AppCompatActivity() {
+    val RC_SIGN_IN = 1000
+
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModels()
@@ -28,6 +31,18 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        // Choose authentication providers
+        val providers = arrayListOf(AuthUI.IdpConfig.EmailBuilder().build())
+
+        // Create and launch sign-in intent
+        startActivityForResult(
+            AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build(),
+            RC_SIGN_IN)
+
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
